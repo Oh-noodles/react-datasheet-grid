@@ -26,6 +26,7 @@ export type CellProps<T, C> = {
 export type CellComponent<T, C> = (props: CellProps<T, C>) => JSX.Element
 
 export type Column<T, C, PasteValue> = {
+  type?: string
   id?: string
   headerClassName?: string
   title?: React.ReactNode
