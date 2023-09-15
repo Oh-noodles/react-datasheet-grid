@@ -1,6 +1,7 @@
 import { createTextColumn } from './textColumn'
 
 export const intColumn = createTextColumn<number | null>({
+  type: 'int',
   alignRight: true,
   formatBlurredInput: (value) =>
     typeof value === 'number' ? new Intl.NumberFormat().format(value) : '',

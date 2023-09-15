@@ -4,6 +4,7 @@ import cx from 'classnames'
 import { useFirstRender } from '../hooks/useFirstRender'
 
 type TextColumnOptions<T> = {
+  type?: string
   placeholder?: string
   alignRight?: boolean
   // When true, data is updated as the user types, otherwise it is only updated on blur. Default to true
@@ -166,6 +167,7 @@ TextComponent.displayName = 'TextComponent'
 export const textColumn = createTextColumn<string | null>()
 
 export function createTextColumn<T = string | null>({
+  type = 'text',
   placeholder,
   alignRight = false,
   continuousUpdates = true,
@@ -178,6 +180,7 @@ export function createTextColumn<T = string | null>({
     (value.replace(/[\n\r]+/g, ' ').trim() || (null as unknown)) as T,
 }: TextColumnOptions<T> = {}): Partial<Column<T, TextColumnData<T>, string>> {
   return {
+    type,
     component: TextComponent as unknown as CellComponent<T, TextColumnData<T>>,
     columnData: {
       placeholder,

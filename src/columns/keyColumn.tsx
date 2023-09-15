@@ -47,6 +47,7 @@ export const keyColumn = <
   key: K,
   column: Partial<Column<T[K], any, PasteValue>>
 ): Partial<Column<T, ColumnData, PasteValue>> => ({
+  type: 'key',
   id: key as string,
   ...column,
   // We pass the key and the original column as columnData to be able to retrieve them in the cell component

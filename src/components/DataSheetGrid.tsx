@@ -41,6 +41,7 @@ import { getAllTabbableElements } from '../utils/tab'
 import { Grid } from './Grid'
 import { SelectionRect } from './SelectionRect'
 import { useRowHeights } from '../hooks/useRowHeights'
+import { lsq } from '../utils/lsq'
 
 const DEFAULT_DATA: any[] = []
 const DEFAULT_COLUMNS: Column<any, any, any>[] = []
@@ -1106,6 +1107,7 @@ export const DataSheetGrid = React.memo(
       const onMouseUp = useCallback(() => {
         if (expandingSelectionFromRowIndex !== null) {
           if (expandSelectionRowsCount > 0 && activeCell) {
+            console.log('expand selection');
             let copyData: Array<Array<string>> = []
 
             const min: Cell = selection?.min || activeCell
@@ -1146,6 +1148,18 @@ export const DataSheetGrid = React.memo(
                   columns[min.col + columnIndex + 1]?.pasteValue
 
                 if (pasteValue) {
+
+                  let lsqFn;
+                  if (['int', 'float'].includes(columns[min.col + columnIndex + 1].type || '')) {
+                    const X = Array.from(Array(copyData.length + 1).keys()).slice(1);
+                    console.log('X: ', X);
+                    console.log('copyData: ', copyData);
+                    const Y = copyData.map((row) => Number(row[columnIndex]));
+                    console.log('Y: ', Y);
+
+                    lsqFn = lsq(X, Y);
+                  }
+
                   for (
                     let rowIndex = max.row + 1;
                     rowIndex <= max.row + expandSelectionRowsCount;
@@ -1157,12 +1171,12 @@ export const DataSheetGrid = React.memo(
                         row: rowIndex,
                       })
                     ) {
+                      const value = lsqFn ? lsqFn(rowIndex - min.row + 1) : copyData[(rowIndex - max.row - 1) % copyData.length][
+                        columnIndex
+                      ];
                       newData[rowIndex] = pasteValue({
                         rowData: newData[rowIndex],
-                        value:
-                          copyData[(rowIndex - max.row - 1) % copyData.length][
-                            columnIndex
-                          ],
+                        value,
                         rowIndex,
                       })
                     }
